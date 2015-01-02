@@ -1,3 +1,6 @@
+#board {
+  margin: 0 auto;
+}
 #board, #board td {
   border: 1px solid black;
 }
@@ -8,8 +11,8 @@
   background: #ccc;
 }
 #board .square {
-  height: 83.5px;
-  width: 83.3px;
+  height: 58.5px;
+  width: 58.3px;
 }
 #board .square.moveable {
   background: yellow;
@@ -20,33 +23,45 @@
 #board .square.live {
   background: red;
 }
-#board .square .piece {
-  background-image: url(../img/Chess_Pieces_Sprite.svg.png);
+.piece {
+  background-image: url(../img/Chess_Pieces_Sprite.svg.small.png);
   background-repeat: no-repeat;
-  height: 83.5px;
-  width: 83.3px;
+  height: 58.5px;
+  width: 58.3px;
 }
-#board .square .piece.rook.black {
-  background-position: -333.2px -83.5px;
+.piece.king.black {
+  background-position: 0 -58.5px;
 }
-#board .square .piece.rook.white {
-  background-position: -333.2px 0;
-}
-#board .square .piece.knight.black {
-  background-position: -249.9px -83.5px;
-}
-#board .square .piece.knight.white {
-  background-position: -249.9px 0;
-}
-#board .square .piece.king.black {
-  background-position: 0 -83.5px;
-}
-#board .square .piece.king.white {
+.piece.king.white {
   background-position: 0 0;
+}
+.piece.queen.black {
+  background-position: -58.3px -58.5px;
+}
+.piece.queen.white {
+  background-position: -58.3px 0;
+}
+.piece.bishop.black {
+  background-position: -116.6px -58.5px;
+}
+.piece.bishop.white {
+  background-position: -116.6px 0;
+}
+.piece.knight.black {
+  background-position: -174.9px -58.5px;
+}
+.piece.knight.white {
+  background-position: -174.9px 0;
+}
+.piece.rook.black {
+  background-position: -233.2px -58.5px;
+}
+.piece.rook.white {
+  background-position: -233.2px 0;
 }
 
 #history {
-  border: 1px solid black;
+  border: 1px solid #ccc;
   height: 100px;
   overflow: auto;
 }
@@ -58,4 +73,10 @@
 #history .black {
   background: black;
   color: white;
+}
+
+#captures {
+  border: 1px solid #ccc;
+  height: 200px;
+  overflow: auto;
 }

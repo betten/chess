@@ -53,14 +53,22 @@
 
         <hr />
 
-        <div class="row">
-          <div class="col-md-6">
-            <strong>Captures by White:</strong>
-            <div ng-repeat="piece in game.captures.by_white">{{piece.name}}</div>
+        <div>
+          <div class="row">
+            <div class="col-md-6">
+              <strong>Captures by White:</strong>
+            </div>
+            <div class="col-md-6">
+              <strong>Captures by Black:</strong>
+            </div>
           </div>
-          <div class="col-md-6">
-            <strong>Captures by Black:</strong>
-            <div ng-repeat="piece in game.captures.by_black">{{piece.name}}</div>
+          <div id="captures" class="row">
+            <div class="col-md-6">
+              <div class="piece black {{piece.name.toLowerCase()}}" ng-repeat="piece in game.captures.by_white"></div>
+            </div>
+            <div class="col-md-6">
+              <div class="piece white {{piece.name.toLowerCase()}}" ng-repeat="piece in game.captures.by_black"></div>
+            </div>
           </div>
         </div>
 
