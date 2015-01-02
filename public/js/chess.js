@@ -27,6 +27,9 @@ piece.Piece.prototype.getCoords = function() {
 piece.Piece.prototype.getValidMoves = function(board) {
   return [];
 };
+piece.Piece.prototype.getNotation = function(square) {
+  return this.short_name + square.file + square.rank;
+};
 
 piece.Rook = function() {
   piece.Piece.apply(this, arguments);
@@ -211,49 +214,72 @@ Board.prototype.getLive = function() {
   }
 };
 
-var board = new Board();
+var Game = function() {
+  this.board = new Board();
 
-board[0][0].piece = new piece.Rook({ row: 0, col: 0, color: 'black' });
-board[0][1].piece = new piece.Knight({ row: 0, col: 1, color: 'black' });
-board[0][4].piece = new piece.King({ row: 0, col: 4, color: 'black' });
+  this.whos_turn = 'white';
+  this.history = { white: [], black: [] };
 
-board[7][0].piece = new piece.Rook({ row: 7, col: 0, color: 'white' });
-board[7][1].piece = new piece.Knight({ row: 7, col: 1, color: 'white' });
-board[7][4].piece = new piece.King({ row: 7, col: 4, color: 'white' });
+  this.fillBoard();
+};
+Game.prototype.fillBoard = function() {
+  var board = this.board;
+
+  board[0][0].piece = new piece.Rook({ row: 0, col: 0, color: 'black' });
+  board[0][1].piece = new piece.Knight({ row: 0, col: 1, color: 'black' });
+  board[0][4].piece = new piece.King({ row: 0, col: 4, color: 'black' });
+
+  board[7][0].piece = new piece.Rook({ row: 7, col: 0, color: 'white' });
+  board[7][1].piece = new piece.Knight({ row: 7, col: 1, color: 'white' });
+  board[7][4].piece = new piece.King({ row: 7, col: 4, color: 'white' });
+};
+Game.prototype.nextTurn = function() {
+  if(this.whos_turn == 'white') this.whos_turn = 'black';
+  else this.whos_turn = 'white';
+};
 
 chessApp.controller("ChessCtrl", function($scope) {
-  $scope.board = board;
+  var game = $scope.game = new Game();
+
+  $scope.newGame = function() {
+    game = $scope.game = new Game();
+  };
 
   $scope.squareClick = function(square) {
     if(square.moveable) {
-      var live = board.getLive();
+      var live = game.board.getLive();
 
       square.piece = live.piece;
       square.piece.row = square.row;
       square.piece.col = square.col;
       live.piece = null;
 
-      board.clear();
+      game.history[game.whos_turn].push(square.piece.getNotation(square)); 
+
+      game.board.clear();
+
+      game.nextTurn();
 
       return true;
     }
     else if(square.killable) {
     }
     else if(square.live) {
-      board.clear();
+      game.board.clear();
       return true;
     }
 
-    board.clear();
+    game.board.clear();
 
-    if(square.piece) {
-      var moves = square.piece.getValidMoves(board);
-      for(var i = 0, n = moves.length; i < n; i++) {
-        if(moves[i].moveable) board[moves[i].row][moves[i].col].moveable = true;
-        if(moves[i].killable) board[moves[i].row][moves[i].col].killable = true;
-      }
+    if(!square.piece) return false;
+    if(square.piece.color != game.whos_turn) return false;
 
-      square.live = true;
+    var moves = square.piece.getValidMoves(game.board);
+    for(var i = 0, n = moves.length; i < n; i++) {
+      if(moves[i].moveable) game.board[moves[i].row][moves[i].col].moveable = true;
+      if(moves[i].killable) game.board[moves[i].row][moves[i].col].killable = true;
     }
+
+    square.live = true;
   };
 });

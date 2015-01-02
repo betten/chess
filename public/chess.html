@@ -10,16 +10,52 @@
   <script src="js/chess.js"></script>
 </head>
 <body ng-controller="ChessCtrl">
-  <h1>Chess</h1>
-  <table id="board">
-    <tr ng-repeat="row in board">
-      <td ng-repeat="square in row" ng-class="{ black: $parent.$odd && $even || $parent.$even && $odd }">
-        <div class="square" ng-class="{ live: square.live, moveable: square.moveable, killable: square.killable }" ng-click="squareClick(square)" ng-model="square">
-          <div ng-if="square.piece" class="piece {{square.piece.name.toLowerCase()}} {{square.piece.color}}"></div>
+  <div class="container">
+    <div class="row">
+
+      <div class="col-md-9">
+        <table id="board">
+          <tr ng-repeat="row in game.board">
+            <td ng-repeat="square in row" ng-class="{ black: $parent.$odd && $even || $parent.$even && $odd }">
+              <div class="square" ng-class="{ live: square.live, moveable: square.moveable, killable: square.killable }" ng-click="squareClick(square)" ng-model="square">
+                <div ng-if="square.piece" class="piece {{square.piece.name.toLowerCase()}} {{square.piece.color}}"></div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="col-md-3">
+        <h1>Chess</h1> <button class="btn btn-success" ng-click="newGame()">New Game</button>
+
+        <hr />
+        <div>
+          <strong>{{game.whos_turn.toUpperCase()}} to move</strong>
         </div>
-      </td>
-    </tr>
-  </table>
+        <hr />
+
+        <div class="row">
+          <div class="col-md-4"><strong>History:</strong></div>
+          <div class="col-md-8">
+
+            <div id="history" class="row">
+              <div class="col-md-6">
+                <div class="move white" ng-repeat="move in game.history.white">{{move}}</div>
+              </div>
+              <div class="col-md-6">
+                <div class="move black" ng-repeat="move in game.history.black">{{move}}</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <hr />
+
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
 

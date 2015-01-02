@@ -27,20 +27,35 @@
   width: 83.3px;
 }
 #board .square .piece.rook.black {
-  background-position: -333.2px 0;
-}
-#board .square .piece.rook.white {
   background-position: -333.2px -83.5px;
 }
-#board .square .piece.knight.black {
-  background-position: -249.9px 0;
+#board .square .piece.rook.white {
+  background-position: -333.2px 0;
 }
-#board .square .piece.knight.white {
+#board .square .piece.knight.black {
   background-position: -249.9px -83.5px;
 }
+#board .square .piece.knight.white {
+  background-position: -249.9px 0;
+}
 #board .square .piece.king.black {
-  background-position: 0 0;
+  background-position: 0 -83.5px;
 }
 #board .square .piece.king.white {
-  background-position: 0 -83.5px;
+  background-position: 0 0;
+}
+
+#history {
+  border: 1px solid black;
+  height: 100px;
+  overflow: auto;
+}
+#history .move {
+  margin: 2px;
+  padding: 2px;
+  text-align: center;
+}
+#history .black {
+  background: black;
+  color: white;
 }
