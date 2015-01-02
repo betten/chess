@@ -6,6 +6,7 @@ piece.Piece = function(args) {
   args = args || {};
   this.name = "";
   this.short_name = "";
+  this.has_moved = false;
 
   this.color = args.color;
   this.col = args.col;
@@ -177,19 +178,29 @@ piece.Pawn.prototype.constructor = piece.Pawn;
 piece.Pawn.prototype.getValidMoves = function(board) {
   var moves = [], pawn = this;
 
-  var row, col, square;
+  var row, col, square, possible;
   
   var forward = (this.color == 'black') ? 1 : -1;
 
-  row = pawn.row + forward;
-  square = board[row] && board[row][pawn.col];
-
-  console.log(square);
-  if(square && !square.piece) {
-    moves.push({ row: square.row, col: square.col, moveable: true });
+  // check moveable
+  possible = [forward]; // possible rows
+  if(!pawn.has_moved) {
+    possible.push(forward * 2);
+  }
+  for(var i = 0, n = possible.length; i < n; i++) {
+    row = pawn.row + possible[i];
+    square = board[row] && board[row][pawn.col];
+    if(!square || square.piece) {
+      break;
+    }
+    else if(!square.piece) {
+      moves.push({ row: square.row, col: square.col, moveable: true });
+    }
   }
 
-  var possible = [1, -1];
+  // check killable
+  possible = [1, -1]; // possible columns
+  row = pawn.row + forward;
   for(var i = 0, n = possible.length; i < n; i++) {
     col = pawn.col + possible[i];
     square = board[row] && board[row][col];
@@ -306,6 +317,7 @@ chessApp.controller("ChessCtrl", function($scope) {
       square.piece = live.piece;
       square.piece.row = square.row;
       square.piece.col = square.col;
+      square.piece.has_moved = true;
       live.piece = null;
 
       game.board.clear();
@@ -330,6 +342,7 @@ chessApp.controller("ChessCtrl", function($scope) {
       square.piece = live.piece;
       square.piece.row = square.row;
       square.piece.col = square.col;
+      square.piece.has_moved = true;
       live.piece = null;
 
       game.board.clear();
