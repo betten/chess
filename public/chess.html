@@ -1,0 +1,26 @@
+<!doctype html>
+<html ng-app="chessApp">
+<head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="css/chess.css">
+  <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular-animate.js"></script>
+  <script src="js/chess.js"></script>
+</head>
+<body ng-controller="ChessCtrl">
+  <h1>Chess</h1>
+  <table id="board">
+    <tr ng-repeat="row in board">
+      <td ng-repeat="square in row" ng-class="{ black: $parent.$odd && $even || $parent.$even && $odd }">
+        <div class="square" ng-class="{ live: square.live, moveable: square.moveable, killable: square.killable }" ng-click="squareClick(square)" ng-model="square">
+          <div ng-if="square.piece" class="piece {{square.piece.name.toLowerCase()}} {{square.piece.color}}"></div>
+        </div>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+
+

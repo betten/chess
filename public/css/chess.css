@@ -1,0 +1,46 @@
+#board, #board td {
+  border: 1px solid black;
+}
+#board td {
+  padding: 10px;
+}
+#board td.black {
+  background: #ccc;
+}
+#board .square {
+  height: 83.5px;
+  width: 83.3px;
+}
+#board .square.moveable {
+  background: yellow;
+}
+#board .square.killable {
+  background: green;
+}
+#board .square.live {
+  background: red;
+}
+#board .square .piece {
+  background-image: url(../img/Chess_Pieces_Sprite.svg.png);
+  background-repeat: no-repeat;
+  height: 83.5px;
+  width: 83.3px;
+}
+#board .square .piece.rook.black {
+  background-position: -333.2px 0;
+}
+#board .square .piece.rook.white {
+  background-position: -333.2px -83.5px;
+}
+#board .square .piece.knight.black {
+  background-position: -249.9px 0;
+}
+#board .square .piece.knight.white {
+  background-position: -249.9px -83.5px;
+}
+#board .square .piece.king.black {
+  background-position: 0 0;
+}
+#board .square .piece.king.white {
+  background-position: 0 -83.5px;
+}
