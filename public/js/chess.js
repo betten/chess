@@ -146,7 +146,7 @@ piece.King.prototype.constructor = piece.King;
 piece.King.prototype.getValidMoves = function(board) {
   var moves = [], king = this;
 
-  var possible = [[1, 0], [0, 1], [-1, 0], [0, -1]];
+  var possible = [[1, 0], [0, 1], [-1, 0], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]];
   
   for(var i = 0, n = possible.length, square, row, col; i < n; i++) {
     row = king.row + possible[i][0];
