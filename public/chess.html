@@ -30,7 +30,8 @@
 
         <hr />
         <div>
-          <strong>{{game.whos_turn.toUpperCase()}} to move</strong>
+          <strong ng-hide="game.over">{{game.whose_turn.toUpperCase()}} to move</strong>
+          <h1 ng-show="game.over">{{game.winner.toUpperCase()}} WINS!</h1>
         </div>
         <hr />
 

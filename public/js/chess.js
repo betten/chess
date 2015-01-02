@@ -217,9 +217,10 @@ Board.prototype.getLive = function() {
 var Game = function() {
   this.board = new Board();
 
-  this.whos_turn = 'white';
+  this.whose_turn = 'white';
   this.history = { white: [], black: [] };
   this.captures = { by_white: [], by_black: [] };
+  this.over = false;
 
   this.fillBoard();
 };
@@ -235,8 +236,8 @@ Game.prototype.fillBoard = function() {
   board[7][4].piece = new piece.King({ row: 7, col: 4, color: 'white' });
 };
 Game.prototype.nextTurn = function() {
-  if(this.whos_turn == 'white') this.whos_turn = 'black';
-  else this.whos_turn = 'white';
+  if(this.whose_turn == 'white') this.whose_turn = 'black';
+  else this.whose_turn = 'white';
 };
 
 chessApp.controller("ChessCtrl", function($scope) {
@@ -247,7 +248,10 @@ chessApp.controller("ChessCtrl", function($scope) {
   };
 
   $scope.squareClick = function(square) {
-    if(square.moveable) {
+    if(game.over) {
+      return false;
+    }
+    else if(square.moveable) {
       var live = game.board.getLive();
 
       square.piece = live.piece;
@@ -255,7 +259,7 @@ chessApp.controller("ChessCtrl", function($scope) {
       square.piece.col = square.col;
       live.piece = null;
 
-      game.history[game.whos_turn].push(square.piece.getNotation(square)); 
+      game.history[game.whose_turn].push(square.piece.getNotation(square)); 
 
       game.board.clear();
 
@@ -266,14 +270,19 @@ chessApp.controller("ChessCtrl", function($scope) {
     else if(square.killable) {
       var live = game.board.getLive();
 
-      game.captures['by_' + game.whos_turn].push(square.piece);
+      if(square.piece.name == 'King') {
+        game.over = true;
+        game.winner = game.whose_turn;
+      }
+
+      game.captures['by_' + game.whose_turn].push(square.piece);
 
       square.piece = live.piece;
       square.piece.row = square.row;
       square.piece.col = square.col;
       live.piece = null;
 
-      game.history[game.whos_turn].push(square.piece.getNotation(square, true)); 
+      game.history[game.whose_turn].push(square.piece.getNotation(square, true)); 
 
       game.board.clear();
 
@@ -289,7 +298,7 @@ chessApp.controller("ChessCtrl", function($scope) {
     game.board.clear();
 
     if(!square.piece) return false;
-    if(square.piece.color != game.whos_turn) return false;
+    if(square.piece.color != game.whose_turn) return false;
 
     var moves = square.piece.getValidMoves(game.board);
     for(var i = 0, n = moves.length; i < n; i++) {
