@@ -166,6 +166,41 @@ piece.King.prototype.getValidMoves = function(board) {
   return moves;
 };
 
+piece.Pawn = function() {
+  piece.Piece.apply(this, arguments);
+
+  this.name = "Pawn";
+  this.short_name = "P";
+};
+piece.Pawn.prototype = Object.create(piece.Piece.prototype);
+piece.Pawn.prototype.constructor = piece.Pawn;
+piece.Pawn.prototype.getValidMoves = function(board) {
+  var moves = [], pawn = this;
+
+  var row, col, square;
+  
+  var forward = (this.color == 'black') ? 1 : -1;
+
+  row = pawn.row + forward;
+  square = board[row] && board[row][pawn.col];
+
+  console.log(square);
+  if(square && !square.piece) {
+    moves.push({ row: square.row, col: square.col, moveable: true });
+  }
+
+  var possible = [1, -1];
+  for(var i = 0, n = possible.length; i < n; i++) {
+    col = pawn.col + possible[i];
+    square = board[row] && board[row][col];
+    if(square && square.piece && square.piece.color != pawn.color) {
+      moves.push({row: square.row, col: square.col, killable: true });
+    }
+  }
+
+  return moves;
+};
+
 var Square = function(args) {
   args = args || {};
   this.color = args.color || '';
@@ -227,13 +262,23 @@ var Game = function() {
 Game.prototype.fillBoard = function() {
   var board = this.board;
 
+  for(var i = 0; i < 8; i++) {
+    board[1][i].piece = new piece.Pawn({ row: 1, col: i, color: 'black' });
+  }
   board[0][0].piece = new piece.Rook({ row: 0, col: 0, color: 'black' });
   board[0][1].piece = new piece.Knight({ row: 0, col: 1, color: 'black' });
   board[0][4].piece = new piece.King({ row: 0, col: 4, color: 'black' });
+  board[0][6].piece = new piece.Knight({ row: 0, col: 6, color: 'black' });
+  board[0][7].piece = new piece.Rook({ row: 0, col: 7, color: 'black' });
 
+  for(var i = 0; i < 8; i++) {
+    board[6][i].piece = new piece.Pawn({ row: 6, col: i, color: 'white' });
+  }
   board[7][0].piece = new piece.Rook({ row: 7, col: 0, color: 'white' });
   board[7][1].piece = new piece.Knight({ row: 7, col: 1, color: 'white' });
   board[7][4].piece = new piece.King({ row: 7, col: 4, color: 'white' });
+  board[7][6].piece = new piece.Knight({ row: 7, col: 6, color: 'white' });
+  board[7][7].piece = new piece.Rook({ row: 7, col: 7, color: 'white' });
 };
 Game.prototype.nextTurn = function() {
   if(this.whose_turn == 'white') this.whose_turn = 'black';
@@ -254,12 +299,14 @@ chessApp.controller("ChessCtrl", function($scope) {
     else if(square.moveable) {
       var live = game.board.getLive();
 
+      game.history[game.whose_turn].push(
+        (live.piece.name == 'Pawn' ? '' : live.piece.short_name) + square.file + square.rank
+      ); 
+
       square.piece = live.piece;
       square.piece.row = square.row;
       square.piece.col = square.col;
       live.piece = null;
-
-      game.history[game.whose_turn].push(square.piece.getNotation(square)); 
 
       game.board.clear();
 
@@ -275,14 +322,15 @@ chessApp.controller("ChessCtrl", function($scope) {
         game.winner = game.whose_turn;
       }
 
+      game.history[game.whose_turn].push(
+        (live.piece.name == 'Pawn' ? live.file : live.piece.short_name) + 'x' + square.file + square.rank
+      );
       game.captures['by_' + game.whose_turn].push(square.piece);
 
       square.piece = live.piece;
       square.piece.row = square.row;
       square.piece.col = square.col;
       live.piece = null;
-
-      game.history[game.whose_turn].push(square.piece.getNotation(square, true)); 
 
       game.board.clear();
 

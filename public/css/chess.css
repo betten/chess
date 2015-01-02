@@ -59,6 +59,12 @@
 .piece.rook.white {
   background-position: -233.2px 0;
 }
+.piece.pawn.black {
+  background-position: -291.5px -58.5px;
+}
+.piece.pawn.white {
+  background-position: -291.5px 0;
+}
 
 #history {
   border: 1px solid #ccc;
