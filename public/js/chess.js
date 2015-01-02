@@ -167,6 +167,79 @@ piece.King.prototype.getValidMoves = function(board) {
   return moves;
 };
 
+piece.Bishop = function() {
+  piece.Piece.apply(this, arguments);
+
+  this.name = "Bishop";
+  this.short_name = "B";
+};
+piece.Bishop.prototype = Object.create(piece.Piece.prototype);
+piece.Bishop.prototype.constructor = piece.Bishop;
+piece.Bishop.prototype.getValidMoves = function(board) {
+  var moves = [], bishop = this;
+
+  var square;
+
+  var checkMove = function(square) {
+    if(!square) {
+      return false;
+    }
+    else if(!square.piece) {
+      moves.push({ row: square.row, col: square.col, moveable: true });
+      return true;
+    }
+    else if(square.piece.color != bishop.color) {
+      moves.push({ row: square.row, col: square.col, killable: true });
+      return false;
+    }
+    else { // same color
+      return false;
+    }
+  };
+
+  // +, +
+  for(var i = 1; i < 8; i++) {
+    row = bishop.row + i;
+    col = bishop.col + i;
+    square = board[row] && board[row][col];
+    if(!checkMove(square)) {
+      break;
+    }
+  }
+
+  // -, -
+  for(var i = 1; i < 8; i++) {
+    row = bishop.row - i;
+    col = bishop.col - i;
+    square = board[row] && board[row][col];
+    if(!checkMove(square)) {
+      break;
+    }
+  }
+
+  // +, -
+  for(var i = 1; i < 8; i++) {
+    row = bishop.row + i;
+    col = bishop.col - i;
+    square = board[row] && board[row][col];
+    if(!checkMove(square)) {
+      break;
+    }
+  }
+
+  // -, +
+  for(var i = 1; i < 8; i++) {
+    row = bishop.row - i;
+    col = bishop.col + i;
+    square = board[row] && board[row][col];
+    if(!checkMove(square)) {
+      break;
+    }
+  }
+
+  return moves;
+};
+
 piece.Pawn = function() {
   piece.Piece.apply(this, arguments);
 
@@ -278,7 +351,9 @@ Game.prototype.fillBoard = function() {
   }
   board[0][0].piece = new piece.Rook({ row: 0, col: 0, color: 'black' });
   board[0][1].piece = new piece.Knight({ row: 0, col: 1, color: 'black' });
+  board[0][2].piece = new piece.Bishop({ row: 0, col: 2, color: 'black' });
   board[0][4].piece = new piece.King({ row: 0, col: 4, color: 'black' });
+  board[0][5].piece = new piece.Bishop({ row: 0, col: 5, color: 'black' });
   board[0][6].piece = new piece.Knight({ row: 0, col: 6, color: 'black' });
   board[0][7].piece = new piece.Rook({ row: 0, col: 7, color: 'black' });
 
@@ -287,7 +362,9 @@ Game.prototype.fillBoard = function() {
   }
   board[7][0].piece = new piece.Rook({ row: 7, col: 0, color: 'white' });
   board[7][1].piece = new piece.Knight({ row: 7, col: 1, color: 'white' });
+  board[7][2].piece = new piece.Bishop({ row: 7, col: 2, color: 'white' });
   board[7][4].piece = new piece.King({ row: 7, col: 4, color: 'white' });
+  board[7][5].piece = new piece.Bishop({ row: 7, col: 5, color: 'white' });
   board[7][6].piece = new piece.Knight({ row: 7, col: 6, color: 'white' });
   board[7][7].piece = new piece.Rook({ row: 7, col: 7, color: 'white' });
 };
