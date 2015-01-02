@@ -40,10 +40,10 @@
 
             <div id="history" class="row">
               <div class="col-md-6">
-                <div class="move white" ng-repeat="move in game.history.white">{{move}}</div>
+                <div class="move white" ng-repeat="move in game.history.white track by $index">{{move}}</div>
               </div>
               <div class="col-md-6">
-                <div class="move black" ng-repeat="move in game.history.black">{{move}}</div>
+                <div class="move black" ng-repeat="move in game.history.black track by $index">{{move}}</div>
               </div>
             </div>
 
@@ -51,6 +51,17 @@
         </div>
 
         <hr />
+
+        <div class="row">
+          <div class="col-md-6">
+            <strong>Captures by White:</strong>
+            <div ng-repeat="piece in game.captures.by_white">{{piece.name}}</div>
+          </div>
+          <div class="col-md-6">
+            <strong>Captures by Black:</strong>
+            <div ng-repeat="piece in game.captures.by_black">{{piece.name}}</div>
+          </div>
+        </div>
 
       </div>
     </div>

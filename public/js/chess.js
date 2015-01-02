@@ -27,8 +27,8 @@ piece.Piece.prototype.getCoords = function() {
 piece.Piece.prototype.getValidMoves = function(board) {
   return [];
 };
-piece.Piece.prototype.getNotation = function(square) {
-  return this.short_name + square.file + square.rank;
+piece.Piece.prototype.getNotation = function(square, capture) {
+  return this.short_name + (capture ? 'x' : '') + square.file + square.rank;
 };
 
 piece.Rook = function() {
@@ -219,6 +219,7 @@ var Game = function() {
 
   this.whos_turn = 'white';
   this.history = { white: [], black: [] };
+  this.captures = { by_white: [], by_black: [] };
 
   this.fillBoard();
 };
@@ -263,6 +264,22 @@ chessApp.controller("ChessCtrl", function($scope) {
       return true;
     }
     else if(square.killable) {
+      var live = game.board.getLive();
+
+      game.captures['by_' + game.whos_turn].push(square.piece);
+
+      square.piece = live.piece;
+      square.piece.row = square.row;
+      square.piece.col = square.col;
+      live.piece = null;
+
+      game.history[game.whos_turn].push(square.piece.getNotation(square, true)); 
+
+      game.board.clear();
+
+      game.nextTurn();
+
+      return true;
     }
     else if(square.live) {
       game.board.clear();
